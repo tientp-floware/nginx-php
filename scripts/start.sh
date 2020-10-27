@@ -1,5 +1,8 @@
 #!/bin/bash
 
+ # Workaround fix xdebug in linux
+ #ip -4 route list match 0/0 | awk '{print $3 " host.docker.internal"}' >> /etc/hosts
+
 # Disable Strict Host checking for non interactive git clones
 
 mkdir -p -m 0700 /root/.ssh
@@ -170,10 +173,11 @@ if [[ "$ENABLE_XDEBUG" == "1" ]] ; then
             echo "Xdebug already enabled... skipping"
         else
             echo "zend_extension=$(find /usr/local/lib/php/extensions/ -name xdebug.so)" > $XdebugFile # Note, single arrow to overwrite file.
-            echo "xdebug.remote_enable=1 "  >> $XdebugFile
+            echo "xdebug.remote_enable=1" >> $XdebugFile
             echo "xdebug.remote_host=host.docker.internal" >> $XdebugFile
-            echo "xdebug.remote_log=/tmp/xdebug.log"  >> $XdebugFile
-            echo "xdebug.remote_autostart=false "  >> $XdebugFile # I use the xdebug chrome extension instead of using autostart
+            echo "xdebug.remote_log=/var/www/html/xdebug.log"  >> $XdebugFile
+            echo "xdebug.remote_connect_back=true"  >> $XdebugFile
+            echo "xdebug.remote_autostart=true "  >> $XdebugFile # I use the xdebug chrome extension instead of using autostart
             # NOTE: xdebug.remote_host is not needed here if you set an environment variable in docker-compose like so `- XDEBUG_CONFIG=remote_host=192.168.111.27`.
             #       you also need to set an env var `- PHP_IDE_CONFIG=serverName=docker`
         fi

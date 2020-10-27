@@ -1,8 +1,18 @@
-version: '3'
+version: '3.5'
+# Network
+networks:
+  sabre:
+      driver: bridge
 services:
   sabre_dav:
+    restart: always
     build: .
+    environment:
+      - ENABLE_XDEBUG=1
+      - XDEBUG_CONFIG=remote_host=172.23.0.1 # this is gateway address in network
     ports:
       - "9092:80"
     volumes:
       - "./src:/var/www/html"
+    networks:
+      - sabre

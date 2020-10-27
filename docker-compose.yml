@@ -1,0 +1,8 @@
+version: '3'
+services:
+  sabre_dav:
+    build: .
+    ports:
+      - "9092:80"
+    volumes:
+      - "./src:/var/www/html"

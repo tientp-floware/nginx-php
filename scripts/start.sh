@@ -196,6 +196,7 @@ if [ ! -z "$PUID" ]; then
 else
   if [ -z "$SKIP_CHOWN" ]; then
     chown -Rf nginx.nginx /var/www/html
+    chown -Rf nginx.nginx /var/www/sabre
   fi
 fi
 

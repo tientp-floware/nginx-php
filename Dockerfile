@@ -1,4 +1,4 @@
-FROM php:7.4.5-fpm-alpine3.11
+FROM php:7.1.23-fpm-alpine3.8
 
 LABEL maintainer="Flo PHP <tientp@flomail.net>"
 
@@ -176,7 +176,7 @@ RUN echo @testing http://nl.alpinelinux.org/alpine/edge/testing >> /etc/apk/repo
     libzip-dev \
     bzip2-dev \
     imap-dev \
-    openssl-dev \
+    #openssl-dev \
     git \
     python3 \
     python3-dev \

@@ -13,7 +13,7 @@
             "/var/www/html": "${workspaceFolder}/src",
         },
         "ignore": [
-            "**/vendor/**/*.php"
+            //"**/vendor/**/*.php"
         ]
     },
 ]

@@ -39,8 +39,8 @@ RUN GPG_KEYS=B0F4253373F8F6F510D42178520A9993A1C052F8 \
     --with-http_addition_module \
     --with-http_sub_module \
     --with-http_dav_module \
-    --with-http_flv_module \
-    --with-http_mp4_module \
+#    --with-http_flv_module \
+#    --with-http_mp4_module \
     --with-http_gunzip_module \
     --with-http_gzip_static_module \
     --with-http_random_index_module \
@@ -58,13 +58,13 @@ RUN GPG_KEYS=B0F4253373F8F6F510D42178520A9993A1C052F8 \
     --with-stream_realip_module \
 #    --with-stream_geoip_module=dynamic \
     --with-http_slice_module \
-    --with-mail \
-    --with-mail_ssl_module \
+#    --with-mail \
+#    --with-mail_ssl_module \
     --with-compat \
     --with-file-aio \
     --with-http_v2_module \
     --add-module=/usr/src/ngx_devel_kit-$DEVEL_KIT_MODULE_VERSION \
-    --add-module=/usr/src/lua-nginx-module-$LUA_MODULE_VERSION \
+#    --add-module=/usr/src/lua-nginx-module-$LUA_MODULE_VERSION \
 #    --add-module=/usr/src/ngx_http_geoip2_module-$GEOIP2_MODULE_VERSION \
   " \
   && addgroup -S nginx \
@@ -206,9 +206,20 @@ RUN echo @testing http://nl.alpinelinux.org/alpine/edge/testing >> /etc/apk/repo
     #docker-php-ext-install pdo_mysql pdo_sqlite mysqli mcrypt gd exif intl xsl json soap dom zip opcache && \
     docker-php-ext-install iconv pdo_mysql pdo_sqlite pgsql pdo_pgsql mysqli gd exif intl xsl json soap dom zip opcache && \
     pecl install xdebug-2.9.2 && \
-    pecl install -o -f redis && \
-    echo "extension=redis.so" > /usr/local/etc/php/conf.d/redis.ini && \
+    #pecl install -o -f redis && \
+    #echo "extension=redis.so" > /usr/local/etc/php/conf.d/redis.ini && \
+    ## APCU
+    pecl install -o -f apcu && \
+    echo "extension=apcu.so" > /usr/local/etc/php/conf.d/apcu.ini && \
+    echo "apc.enabled=1" > /usr/local/etc/php/conf.d/apcu.ini && \
+    # echo "apc.slam_defense=1" >> /usr/local/etc/php/conf.d/apcu.ini && \
+    echo "apc.shm_size=128M" >> /usr/local/etc/php/conf.d/apcu.ini && \
+    echo "apc.gc_ttl=3600" >> /usr/local/etc/php/conf.d/apcu.ini && \
+    echo "apc.mmap_file_mask=/tmp/apc.XXXXXX" >> /usr/local/etc/php/conf.d/apcu.ini && \
+    echo "apc.preload_path=/var/www/html" >> /usr/local/etc/php/conf.d/apcu.ini && \
+    ## clearup
     docker-php-source delete && \
+    pecl clear-cache && \
     mkdir -p /etc/nginx && \
     mkdir -p /var/www/app && \
     mkdir -p /run/nginx && \

@@ -221,10 +221,10 @@ if [ -z "$SKIP_COMPOSER" ]; then
     if [ -f "/var/www/html/composer.lock" ]; then
         if [ "$APPLICATION_ENV" == "development" ]; then
             composer global require hirak/prestissimo
-            composer install --working-dir=/var/www/html
+            composer install --optimize-autoloader --working-dir=/var/www/html
         else
             composer global require hirak/prestissimo
-            composer install --no-dev --working-dir=/var/www/html
+            composer install --optimize-autoloader --no-dev --working-dir=/var/www/html
         fi
     fi
 fi

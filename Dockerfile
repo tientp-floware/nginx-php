@@ -1,4 +1,4 @@
-FROM php:7.1.23-fpm-alpine3.8
+FROM php:7.4.5-fpm-alpine3.11
 
 LABEL maintainer="Flo PHP <tientp@flomail.net>"
 
@@ -13,7 +13,6 @@ ENV GEOIP2_MODULE_VERSION 3.2
 ENV LUAJIT_LIB=/usr/lib
 ENV LUAJIT_INC=/usr/include/luajit-2.1
 
-# resolves #166
 ENV LD_PRELOAD /usr/lib/preloadable_libiconv.so php
 RUN apk add --no-cache --repository http://dl-3.alpinelinux.org/alpine/edge/community gnu-libiconv
 
@@ -39,8 +38,8 @@ RUN GPG_KEYS=B0F4253373F8F6F510D42178520A9993A1C052F8 \
     --with-http_addition_module \
     --with-http_sub_module \
     --with-http_dav_module \
-#    --with-http_flv_module \
-#    --with-http_mp4_module \
+    --with-http_flv_module \
+    --with-http_mp4_module \
     --with-http_gunzip_module \
     --with-http_gzip_static_module \
     --with-http_random_index_module \
@@ -58,13 +57,13 @@ RUN GPG_KEYS=B0F4253373F8F6F510D42178520A9993A1C052F8 \
     --with-stream_realip_module \
 #    --with-stream_geoip_module=dynamic \
     --with-http_slice_module \
-#    --with-mail \
-#    --with-mail_ssl_module \
+    --with-mail \
+    --with-mail_ssl_module \
     --with-compat \
     --with-file-aio \
     --with-http_v2_module \
     --add-module=/usr/src/ngx_devel_kit-$DEVEL_KIT_MODULE_VERSION \
-#    --add-module=/usr/src/lua-nginx-module-$LUA_MODULE_VERSION \
+    --add-module=/usr/src/lua-nginx-module-$LUA_MODULE_VERSION \
 #    --add-module=/usr/src/ngx_http_geoip2_module-$GEOIP2_MODULE_VERSION \
   " \
   && addgroup -S nginx \
@@ -176,7 +175,7 @@ RUN echo @testing http://nl.alpinelinux.org/alpine/edge/testing >> /etc/apk/repo
     libzip-dev \
     bzip2-dev \
     imap-dev \
-    #openssl-dev \
+    openssl-dev \
     git \
     python3 \
     python3-dev \
@@ -209,23 +208,11 @@ RUN echo @testing http://nl.alpinelinux.org/alpine/edge/testing >> /etc/apk/repo
     #pecl install -o -f redis && \
     #echo "extension=redis.so" > /usr/local/etc/php/conf.d/redis.ini && \
     ## opcache
-    echo "zend_extension=opcache.so;" > /usr/local/etc/php/conf.d/opcache.ini && \
-    echo "opcache.enable=1;" > /usr/local/etc/php/conf.d/opcache.ini && \
-    echo "opcache.preload=/var/www/html/vendor/autoload.php;" > /usr/local/etc/php/conf.d/opcache.ini && \
-    ## APCU
-    pecl install -o -f apcu && \
-    echo "extension=apcu.so;" > /usr/local/etc/php/conf.d/apcu.ini && \
-    echo "apc.enabled=1;" >> /usr/local/etc/php/conf.d/apcu.ini && \
-    echo "apc.enable_cli=1;" >> /usr/local/etc/php/conf.d/apcu.ini && \
-    echo "apc.slam_defense=1;" >> /usr/local/etc/php/conf.d/apcu.ini && \
-    echo "apc.shm_size=128M;" >> /usr/local/etc/php/conf.d/apcu.ini && \
-    echo "apc.gc_ttl=3600;" >> /usr/local/etc/php/conf.d/apcu.ini && \
-    echo "apc.mmap_file_mask=/tmp/apc.XXXXXX;" >> /usr/local/etc/php/conf.d/apcu.ini && \
-    echo "apc.writable=/tmp;" >> /usr/local/etc/php/conf.d/apcu.ini && \
-    echo "apc.preload_path=/var/www/html/vendor/autoload.php;" >> /usr/local/etc/php/conf.d/apcu.ini && \
-    ## clearup
+    #echo "zend_extension=opcache.so;" > /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini && \
+    echo "opcache.enable=1" >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini && \
+    echo "opcache.preload_user=www-data" >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini && \
+    echo "opcache.preload=/var/www/html/preload.php" >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini && \
     docker-php-source delete && \
-    pecl clear-cache && \
     mkdir -p /etc/nginx && \
     mkdir -p /var/www/app && \
     mkdir -p /run/nginx && \
@@ -251,8 +238,7 @@ RUN mkdir -p /etc/nginx/sites-available/ && \
 mkdir -p /etc/nginx/sites-enabled/ && \
 mkdir -p /etc/nginx/ssl/ && \
 rm -Rf /var/www/* && \
-mkdir /var/www/html/ && \
-mkdir /var/www/sabre/
+mkdir /var/www/html/
 ADD conf/nginx-site.conf /etc/nginx/sites-available/default.conf
 ADD conf/nginx-site-ssl.conf /etc/nginx/sites-available/default-ssl.conf
 RUN ln -s /etc/nginx/sites-available/default.conf /etc/nginx/sites-enabled/default.conf

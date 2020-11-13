@@ -208,15 +208,21 @@ RUN echo @testing http://nl.alpinelinux.org/alpine/edge/testing >> /etc/apk/repo
     pecl install xdebug-2.9.2 && \
     #pecl install -o -f redis && \
     #echo "extension=redis.so" > /usr/local/etc/php/conf.d/redis.ini && \
+    ## opcache
+    echo "zend_extension=opcache.so;" > /usr/local/etc/php/conf.d/opcache.ini && \
+    echo "opcache.enable=1;" > /usr/local/etc/php/conf.d/opcache.ini && \
+    echo "opcache.preload=/var/www/html/vendor/autoload.php;" > /usr/local/etc/php/conf.d/opcache.ini && \
     ## APCU
     pecl install -o -f apcu && \
-    echo "extension=apcu.so" > /usr/local/etc/php/conf.d/apcu.ini && \
-    echo "apc.enabled=1" > /usr/local/etc/php/conf.d/apcu.ini && \
-    # echo "apc.slam_defense=1" >> /usr/local/etc/php/conf.d/apcu.ini && \
-    echo "apc.shm_size=128M" >> /usr/local/etc/php/conf.d/apcu.ini && \
-    echo "apc.gc_ttl=3600" >> /usr/local/etc/php/conf.d/apcu.ini && \
-    echo "apc.mmap_file_mask=/tmp/apc.XXXXXX" >> /usr/local/etc/php/conf.d/apcu.ini && \
-    echo "apc.preload_path=/var/www/html" >> /usr/local/etc/php/conf.d/apcu.ini && \
+    echo "extension=apcu.so;" > /usr/local/etc/php/conf.d/apcu.ini && \
+    echo "apc.enabled=1;" >> /usr/local/etc/php/conf.d/apcu.ini && \
+    echo "apc.enable_cli=1;" >> /usr/local/etc/php/conf.d/apcu.ini && \
+    echo "apc.slam_defense=1;" >> /usr/local/etc/php/conf.d/apcu.ini && \
+    echo "apc.shm_size=128M;" >> /usr/local/etc/php/conf.d/apcu.ini && \
+    echo "apc.gc_ttl=3600;" >> /usr/local/etc/php/conf.d/apcu.ini && \
+    echo "apc.mmap_file_mask=/tmp/apc.XXXXXX;" >> /usr/local/etc/php/conf.d/apcu.ini && \
+    echo "apc.writable=/tmp;" >> /usr/local/etc/php/conf.d/apcu.ini && \
+    echo "apc.preload_path=/var/www/html/vendor/autoload.php;" >> /usr/local/etc/php/conf.d/apcu.ini && \
     ## clearup
     docker-php-source delete && \
     pecl clear-cache && \

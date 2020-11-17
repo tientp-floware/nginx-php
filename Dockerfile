@@ -13,9 +13,12 @@ WORKDIR /var/www/html
 RUN docker-php-ext-install iconv pdo_mysql
 RUN docker-php-ext-install mysqli gd exif intl xsl json zip opcache
 
+## Debug 
+RUN pecl install xdebug
+
 RUN echo "opcache.enable=1" >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini && \
-    #echo "opcache.preload_user=www-data" >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini && \
-    #echo "opcache.preload=/var/www/html/preload.php" >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini && \
+    echo "opcache.preload_user=www-data" >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini && \
+    echo "opcache.preload=/var/www/html/preload.php" >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini && \
     echo 'max_execution_time = 120s' > /usr/local/etc/php/conf.d/docker-php-maxexectime.ini && \
     echo "cgi.fix_pathinfo=0" > ${php_vars} &&\
     echo "upload_max_filesize = 25M"  >> ${php_vars} &&\

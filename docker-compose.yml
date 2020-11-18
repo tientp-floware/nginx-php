@@ -12,7 +12,7 @@ services:
       - XDEBUG_CONFIG=remote_host=172.24.0.1 # this is gateway address in network docker 
     env_file: ./src/.env
     ports:
-      - "9092:80"
+      - "80:80"
     volumes:
       - "./src:/var/www/html"
     depends_on:

@@ -14,7 +14,7 @@ RUN docker-php-ext-install iconv pdo_mysql
 RUN docker-php-ext-install mysqli gd exif intl xsl json zip opcache
 
 ## Debug 
-RUN pecl install xdebug
+RUN pecl install xdebug-3.1.6
 
 RUN echo "opcache.enable=1" >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini && \
     #echo "opcache.preload_user=www-data" >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini && \

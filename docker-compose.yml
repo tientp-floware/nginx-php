@@ -17,17 +17,6 @@ services:
       - "./src:/var/www/html"
     networks:
       - sabre  
-  # database
-  mysql_db:
-    image: mysql:5.7.12
-    restart: always
-    env_file: ./src/.env
-    ports:
-        - "3306:3306"
-    volumes:
-      - ./database/mysql:/var/lib/mysql
-    networks:
-      - sabre
   # admin for mysql
   adminer:
     image: adminer

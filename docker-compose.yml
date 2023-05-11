@@ -9,7 +9,9 @@ services:
     build: .
     environment:
       - ENABLE_XDEBUG=1
-      - XDEBUG_CONFIG=client_host=172.20.0.1 # this is gateway address in network docker 
+      # Linux kernel client_host=host.docker.internal
+      # Other kernel client_host=172.24.0.1 `docker network  inspect [name]` is gateway address in network docker 
+      - XDEBUG_CONFIG=client_host=host.docker.internal
     env_file: ./src/.env
     ports:
       - "80:80"

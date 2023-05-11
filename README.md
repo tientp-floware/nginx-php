@@ -1,4 +1,3 @@
-======================================================
 Play with docker-compose
 ---------
 * Clone [Nginx - PHP](https://github.com/tientp-floware/nginx-php) - it's open source
